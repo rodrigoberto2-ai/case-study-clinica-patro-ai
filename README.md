@@ -1,74 +1,74 @@
-# Case Study — Automatização com IA para a Clínica Patro
+# Case Study — Automatización con IA para la Clínica Patro
 
-**Problema de negócio → solução técnica → impacto esperado.** Um sistema de
-automatização de atendimento via WhatsApp (texto e voz) para uma clínica de
-podologia em Madrid, combinando BI/análise de processos com engenharia de IA
+**Problema de negocio → solución técnica → impacto esperado.** Un sistema de
+automatización de atención vía WhatsApp (texto y voz) para una clínica de
+podología en Madrid, combinando BI/análisis de procesos con ingeniería de IA
 aplicada.
 
-## O problema
+## El problema
 
-Sem automatização, a clínica perdia tempo e receita em três pontos:
+Sin automatización, la clínica perdía tiempo e ingresos en tres puntos:
 
-- **Mensagens repetitivas** (horários, serviços, como marcar) consumiam horas
-  por semana que podiam ir para atendimento a pacientes.
-- **Resposta lenta** — um paciente sem resposta rápida procura outra clínica;
-  a primeira resposta decide se a marcação se fecha ou se perde.
-- **Faltas sem aviso** — entre 15% e 25% dos pacientes esquecem a consulta
-  sem lembrete automático, e cada vaga vazia é receita não recuperada.
+- **Mensajes repetitivos** (horarios, servicios, cómo reservar) consumían horas
+  a la semana que podían dedicarse a la atención de pacientes.
+- **Respuesta lenta** — un paciente sin respuesta rápida busca otra clínica;
+  la primera respuesta decide si la cita se cierra o se pierde.
+- **Faltas sin aviso** — entre el 15% y el 25% de los pacientes olvidan la cita
+  sin un recordatorio automático, y cada hueco vacío es ingreso no recuperado.
 
-## A solução — 3 módulos interligados
+## La solución — 3 módulos interconectados
 
 ### 1. Bot de WhatsApp (`clinica-patro-bot`)
-Atende o paciente 24h, recolhe os dados da marcação (serviço, dia preferido,
-contacto), propõe horários livres da agenda em tempo real e confirma a
-consulta — sem intervenção manual.
+Atiende al paciente 24h, recoge los datos de la reserva (servicio, día
+preferido, contacto), propone horarios libres de la agenda en tiempo real y
+confirma la cita, sin intervención manual.
 
-- **Stack:** Next.js 16, TypeScript, OpenAI API (conversação), Supabase
-  (base de dados de pacientes/marcações), `pdfjs-dist`/`pdf-parse` (o bot lê
-  documentos internos da clínica — preços, serviços — para responder com
-  informação sempre atualizada sem hardcode).
-- **Decisão técnica:** manter o bot e o site institucional no mesmo stack
-  (Next.js) simplifica deployment e partilha de componentes/estilos.
+- **Stack:** Next.js 16, TypeScript, OpenAI API (conversación), Supabase
+  (base de datos de pacientes/reservas), `pdfjs-dist`/`pdf-parse` (el bot lee
+  documentos internos de la clínica —precios, servicios— para responder con
+  información siempre actualizada sin hardcode).
+- **Decisión técnica:** mantener el bot y el sitio institucional en el mismo
+  stack (Next.js) simplifica el despliegue y la reutilización de componentes/estilos.
 
-### 2. Recordatórios automáticos
-Envia lembrete 24h e 2h antes de cada consulta, com opção de confirmar ou
-cancelar. Uma cancelação aciona automaticamente o módulo seguinte.
+### 2. Recordatorios automáticos
+Envía un recordatorio 24h y 2h antes de cada cita, con opción de confirmar o
+cancelar. Una cancelación activa automáticamente el módulo siguiente.
 
 ### 3. Lista de espera inteligente (`clinica-patro-voz`)
-Quando há uma vaga (cancelamento), o sistema pode contactar por **voz** o
-próximo paciente da lista de espera — não só texto.
+Cuando se libera un hueco (cancelación), el sistema puede contactar por **voz**
+al siguiente paciente de la lista de espera, no solo por texto.
 
-- **Stack:** Fastify + WebSocket (streaming de áudio em tempo real), Twilio
-  (telefonia), OpenAI Realtime API (conversação por voz), deploy em
+- **Stack:** Fastify + WebSocket (streaming de audio en tiempo real), Twilio
+  (telefonía), OpenAI Realtime API (conversación por voz), despliegue en
   Docker/Fly.io.
-- **Porquê voz e não só texto:** parte dos pacientes (sobretudo idade mais
-  avançada) responde melhor a uma chamada do que a uma mensagem — cobre um
-  segmento que o bot de texto sozinho não alcançava.
+- **Por qué voz y no solo texto:** parte de los pacientes (sobre todo de más
+  edad) responde mejor a una llamada que a un mensaje, cubriendo un segmento
+  al que el bot de texto por sí solo no llegaba.
 
-## Impacto (estimado com base na análise de processo da clínica)
+## Impacto (estimado a partir del análisis del proceso de la clínica)
 
-| Métrica | Antes | Com o sistema |
+| Métrica | Antes | Con el sistema |
 |---|---|---|
-| Tempo de resposta ao paciente | Horas (dependia de disponibilidade manual) | Segundos, 24h/dia |
-| Faltas sem aviso | 15–25% das consultas | ~20% menos faltas (com lembrete automático) |
-| Vagas por cancelamento | Perdidas | Preenchidas automaticamente via lista de espera |
-| Custo de infraestrutura | — | €0–5/mês (WhatsApp Cloud API + Supabase, planos gratuitos até ao volume da clínica) |
+| Tiempo de respuesta al paciente | Horas (dependía de disponibilidad manual) | Segundos, 24h/día |
+| Faltas sin aviso | 15–25% de las citas | ~20% menos faltas (con recordatorio automático) |
+| Huecos por cancelación | Perdidos | Cubiertos automáticamente vía lista de espera |
+| Coste de infraestructura | — | €0–5/mes (WhatsApp Cloud API + Supabase, planes gratuitos hasta el volumen de la clínica) |
 
-## O que isto demonstra (para além do bot em si)
+## Qué demuestra esto (más allá del bot en sí)
 
-- Capacidade de **traduzir um processo de negócio real** (perda de receita
-  por faltas e resposta lenta) numa solução técnica com métricas de impacto
-  claras — a mesma competência de BI aplicada a um produto, não só a um
-  dashboard.
-- **Integração de sistemas** (WhatsApp Cloud API, Supabase, OpenAI, Twilio)
-  em produção, não só em ambiente de tutorial.
-- **Análise de custo-benefício** — desenho da solução para custo operacional
-  mínimo (€0–5/mês), relevante para PMEs, o segmento mais comum no mercado
-  espanhol.
+- Capacidad de **traducir un proceso de negocio real** (pérdida de ingresos
+  por faltas y respuesta lenta) en una solución técnica con métricas de
+  impacto claras — la misma competencia de BI aplicada a un producto, no solo
+  a un dashboard.
+- **Integración de sistemas** (WhatsApp Cloud API, Supabase, OpenAI, Twilio)
+  en producción, no solo en un entorno de tutorial.
+- **Análisis coste-beneficio** — diseño de la solución para un coste operativo
+  mínimo (€0–5/mes), relevante para pymes, el segmento más común del mercado
+  español.
 
 ## Nota sobre este case study
 
-O código-fonte destes projetos não está público (é uma aplicação em produção
-com dados reais de pacientes). Este documento descreve arquitetura, decisões
-técnicas e impacto de negócio — a mesma forma como se apresentaria o projeto
-numa entrevista técnica.
+El código fuente de estos proyectos no es público (es una aplicación en
+producción con datos reales de pacientes). Este documento describe
+arquitectura, decisiones técnicas e impacto de negocio, tal como se
+presentaría el proyecto en una entrevista técnica.
